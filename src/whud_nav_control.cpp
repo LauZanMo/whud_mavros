@@ -14,9 +14,9 @@ class WhudNavPlugin : public plugin::PluginBase {
     whud_nh_.param<float>("max_roll", max_roll_, 0.5);
     whud_nh_.param<float>("max_pitch", max_pitch_, 0.5);
 
-    cmd_vel_sub_ = whud_nh_.subscribe("whud_nav/cmd_vel", 1,
+    cmd_vel_sub_ = whud_nh_.subscribe("cmd_vel", 1,
                                       &WhudNavPlugin::cmd_vel_cb, this);
-    conversion_sub_ = whud_nh_.subscribe("whud_nav//conversion", 1,
+    conversion_sub_ = whud_nh_.subscribe("conversion", 1,
                                          &WhudNavPlugin::conversion_cb, this);
     conversion_timer_ = whud_nh_.createTimer(ros::Duration(0.1),
                                              &WhudNavPlugin::timer_cb, this);

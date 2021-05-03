@@ -16,13 +16,13 @@ class WhudBasicPlugin : public plugin::PluginBase {
     whud_nh_.param("last_reject_index", last_reject_index_, -1);
     whud_nh_.param("last_reject_reason", last_reject_reason_, -1);
 
-    takeoff_sub_ = whud_nh_.subscribe("whud_basic/takeoff_height", 1,
+    takeoff_sub_ = whud_nh_.subscribe("takeoff_height", 1,
                                       &WhudBasicPlugin::takeoff_cb, this);
-    land_sub_ = whud_nh_.subscribe("whud_basic//land", 1,
+    land_sub_ = whud_nh_.subscribe("land", 1,
                                    &WhudBasicPlugin::land_cb, this);
-    height_sub_ = whud_nh_.subscribe("whud_basic//height", 1,
+    height_sub_ = whud_nh_.subscribe("height", 1,
                                      &WhudBasicPlugin::height_cb, this);
-    yaw_sub_ = whud_nh_.subscribe("whud_basic//yaw", 1,
+    yaw_sub_ = whud_nh_.subscribe("yaw", 1,
                                   &WhudBasicPlugin::yaw_cb, this);
   }
 
