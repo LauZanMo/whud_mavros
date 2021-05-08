@@ -262,7 +262,11 @@ wheel_odometry:
 # vim:set ts=2 sw=2 et:
 
 # whud_basic
-# None
+whud_basic:
+  ack_cmd_index: -1
+  ack_result: -1
+  last_reject_index: -1
+  last_reject_reason: -1
 
 # whud_nav
 whud_nav:
