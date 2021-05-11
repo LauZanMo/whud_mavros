@@ -71,7 +71,7 @@ class WhudBasicPlugin : public plugin::PluginBase {
     // MAV_CMD_NAV_LAND_LOCAL
     msg.command = 23;
     // set z axis speed
-    msg.param3 = land_msg->data;
+    msg.param3 = land_msg->data > 0 ? (-land_msg->data) : (land_msg->data);
 
     UAS_FCU(m_uas)->send_message_ignore_drop(msg);
   }
