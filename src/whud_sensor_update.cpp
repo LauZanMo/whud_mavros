@@ -23,9 +23,9 @@ public:
     whud_nh_.param<std::string>("id/lidar_source", lidar_source_id_,
                                 "track_link");
     whud_nh_.param<std::string>("id/visual_pos_target", visual_pos_target_id_,
-                                "camera_link");
-    whud_nh_.param<std::string>("id/visual_pos_source", visual_pos_source_id_,
                                 "camera_odom");
+    whud_nh_.param<std::string>("id/visual_pos_source", visual_pos_source_id_,
+                                "camera_link");
     whud_nh_.param<std::string>("id/visual_vel_track", visual_vel_track_id_,
                                 "camera_link");
     whud_nh_.param<std::string>("id/visual_vel_observation",
