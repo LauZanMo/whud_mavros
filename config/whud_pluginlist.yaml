@@ -21,7 +21,7 @@ plugin_blacklist:
 # - local_position
 - log_transfer
 - manual_control
-#- mocap_pose_estimate
+- mocap_pose_estimate
 - mount_control
 - obstacle_distance
 - odom
@@ -44,7 +44,7 @@ plugin_blacklist:
 - vfr_hud
 - vibration
 - vision_pose_estimate
-#- vision_speed_estimate
+- vision_speed_estimate
 - waypoint
 - wheel_odometry
 - wind_estimation
@@ -56,8 +56,6 @@ plugin_whitelist:
 #- 'sys_*'
 - imu
 - local_position
-- mocap_pose_estimate
-- vision_speed_estimate
 - whud_basic_control
 - whud_nav_control
 - whud_sensor_update

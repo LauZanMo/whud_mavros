@@ -280,7 +280,7 @@ whud_sensor:
     visual_pos: false
     visual_vel: false
   period:
-    lidar: 0.05
+    lidar: 0.1
     visual_pos: 0.05
     visual_vel: 0.02
   id:
