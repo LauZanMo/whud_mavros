@@ -1,6 +1,7 @@
 #include <mavros/mavros_plugin.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Float64MultiArray.h>
+#include <std_msgs/Bool.h>
 
 namespace mavros {
 namespace extra_plugins {
@@ -18,12 +19,12 @@ class WhudBasicPlugin : public plugin::PluginBase {
 
     takeoff_sub_ = whud_nh_.subscribe("takeoff_height", 1,
                                       &WhudBasicPlugin::takeoff_cb, this);
-    land_sub_ = whud_nh_.subscribe("land", 1,
-                                   &WhudBasicPlugin::land_cb, this);
-    height_sub_ = whud_nh_.subscribe("height", 1,
-                                     &WhudBasicPlugin::height_cb, this);
-    yaw_sub_ = whud_nh_.subscribe("yaw", 1,
-                                  &WhudBasicPlugin::yaw_cb, this);
+    land_sub_ = whud_nh_.subscribe("land", 1, &WhudBasicPlugin::land_cb, this);
+    height_sub_ =
+        whud_nh_.subscribe("height", 1, &WhudBasicPlugin::height_cb, this);
+    yaw_sub_ = whud_nh_.subscribe("yaw", 1, &WhudBasicPlugin::yaw_cb, this);
+    set_mode_sub_ = whud_nh_.subscribe("set_mode", 1, &WhudBasicPlugin::set_mode_cb, this);
+    play_tune_sub_ = whud_nh_.subscribe("play_tune", 1, &WhudBasicPlugin::play_tune_cb, this);
   }
 
   Subscriptions get_subscriptions() override {
@@ -42,6 +43,8 @@ class WhudBasicPlugin : public plugin::PluginBase {
   ros::Subscriber land_sub_;
   ros::Subscriber height_sub_;
   ros::Subscriber yaw_sub_;
+  ros::Subscriber set_mode_sub_;
+  ros::Subscriber play_tune_sub_;
 
   void handle_progress(const mavlink::mavlink_message_t *msg,
                        mavlink::common::msg::COMMAND_ACK &progress_msg) {
@@ -96,6 +99,26 @@ class WhudBasicPlugin : public plugin::PluginBase {
     msg.param1 = yaw_msg->data[0];
     // 0: absolute angle, 1: relative offset
     msg.param4 = yaw_msg->data[1];
+
+    UAS_FCU(m_uas)->send_message_ignore_drop(msg);
+  }
+
+  void set_mode_cb(const std_msgs::Float64MultiArray::ConstPtr &set_mode_msg) {
+    mavlink::common::msg::COMMAND_LONG msg;
+    // MAV_CMD_DO_SET_MODE
+    msg.command = 176;
+    // set mode
+    msg.param1 = set_mode_msg->data[0];
+    // set custom mode
+    msg.param2 = set_mode_msg->data[1];
+
+    UAS_FCU(m_uas)->send_message_ignore_drop(msg);
+  }
+
+  void play_tune_cb(const std_msgs::Bool::ConstPtr &play_tune_msg) {
+    mavlink::common::msg::PLAY_TUNE msg;
+    // PLAY_TUNE
+    msg.tune[0] = (char)play_tune_msg->data;
 
     UAS_FCU(m_uas)->send_message_ignore_drop(msg);
   }
