@@ -72,7 +72,11 @@ private:
       if (tf_listener_.canTransform("/" + lidar_target_id_,
                                     "/" + lidar_source_id_, ros::Time(0))) {
         lidar_transform_exist_ = true;
+        whud_nh_.setParam("state/lidar", true);
         ROS_INFO("Lidar SLAM transform detected.");
+      } else {
+        lidar_transform_exist_ = false;
+        whud_nh_.setParam("state/lidar", false);
       }
 
     } else {
@@ -84,6 +88,7 @@ private:
                                      tf_transform);
       } catch (tf::LookupException &ex) {
         lidar_transform_exist_ = false;
+        whud_nh_.setParam("state/lidar", false);
         ROS_WARN("%s", ex.what());
         return;
       }
@@ -103,7 +108,11 @@ private:
                                     "/" + visual_pos_source_id_,
                                     ros::Time(0))) {
         visual_pose_transform_exist_ = true;
+        whud_nh_.setParam("state/visual_pos", true);
         ROS_INFO("Visual SLAM position transform detected.");
+      } else {
+        visual_pose_transform_exist_ = false;
+        whud_nh_.setParam("state/visual_pos", false);
       }
 
     } else {
@@ -115,6 +124,7 @@ private:
                                      tf_transform);
       } catch (tf::LookupException &ex) {
         visual_pose_transform_exist_ = false;
+        whud_nh_.setParam("state/visual_pos", false);
         ROS_WARN("%s", ex.what());
         return;
       }
@@ -133,7 +143,11 @@ private:
                                     "/" + visual_vel_observation_id_,
                                     ros::Time(0))) {
         visual_vel_transform_exist_ = true;
+        whud_nh_.setParam("state/visual_vel", true);
         ROS_INFO("Visual SLAM velocity transform detected.");
+      } else {
+        visual_vel_transform_exist_ = false;
+        whud_nh_.setParam("state/visual_vel", false);
       }
 
     } else {
@@ -145,6 +159,7 @@ private:
             ros::Time(0), ros::Duration(0.5 * visual_vel_period_), tf_twist);
       } catch (tf::LookupException &ex) {
         visual_vel_transform_exist_ = false;
+        whud_nh_.setParam("state/visual_vel", false);
         ROS_WARN("%s", ex.what());
         return;
       }

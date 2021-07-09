@@ -290,3 +290,7 @@ whud_sensor:
     visual_pos_source: "camera_link"
     visual_vel_track: "camera_link"
     visual_vel_observation: "camera_odom_frame"
+  state:
+    lidar: false
+    visual_pos: false
+    visual_vel: false
