@@ -1,12 +1,12 @@
 #include <mavros/mavros_plugin.h>
+#include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Float64MultiArray.h>
-#include <std_msgs/Bool.h>
 
 namespace mavros {
 namespace extra_plugins {
 class WhudBasicPlugin : public plugin::PluginBase {
- public:
+public:
   WhudBasicPlugin() : PluginBase(), whud_nh_("~whud_basic") {}
 
   void initialize(UAS &uas_) override {
@@ -23,8 +23,12 @@ class WhudBasicPlugin : public plugin::PluginBase {
     height_sub_ =
         whud_nh_.subscribe("height", 1, &WhudBasicPlugin::height_cb, this);
     yaw_sub_ = whud_nh_.subscribe("yaw", 1, &WhudBasicPlugin::yaw_cb, this);
-    set_mode_sub_ = whud_nh_.subscribe("set_mode", 1, &WhudBasicPlugin::set_mode_cb, this);
-    play_tune_sub_ = whud_nh_.subscribe("play_tune", 1, &WhudBasicPlugin::play_tune_cb, this);
+    set_mode_sub_ =
+        whud_nh_.subscribe("set_mode", 1, &WhudBasicPlugin::set_mode_cb, this);
+    disarm_sub_ =
+        whud_nh_.subscribe("disarm", 1, &WhudBasicPlugin::disarm_cb, this);
+    play_tune_sub_ = whud_nh_.subscribe("play_tune", 1,
+                                        &WhudBasicPlugin::play_tune_cb, this);
   }
 
   Subscriptions get_subscriptions() override {
@@ -33,7 +37,7 @@ class WhudBasicPlugin : public plugin::PluginBase {
     };
   }
 
- private:
+private:
   ros::NodeHandle whud_nh_;
 
   int ack_cmd_index_, ack_result_;
@@ -44,6 +48,7 @@ class WhudBasicPlugin : public plugin::PluginBase {
   ros::Subscriber height_sub_;
   ros::Subscriber yaw_sub_;
   ros::Subscriber set_mode_sub_;
+  ros::Subscriber disarm_sub_;
   ros::Subscriber play_tune_sub_;
 
   void handle_progress(const mavlink::mavlink_message_t *msg,
@@ -113,6 +118,18 @@ class WhudBasicPlugin : public plugin::PluginBase {
     msg.param2 = set_mode_msg->data[1];
 
     UAS_FCU(m_uas)->send_message_ignore_drop(msg);
+  }
+
+  void disarm_cb(const std_msgs::Bool::ConstPtr &play_tune_msg) {
+    if (play_tune_msg->data) {
+      mavlink::common::msg::COMMAND_LONG msg;
+      // MAV_CMD_COMPONENT_ARM_DISARM
+      msg.command = 400;
+      // Arm: 0: disarm, 1: arm
+      msg.param1 = 0;
+
+      UAS_FCU(m_uas)->send_message_ignore_drop(msg);
+    }
   }
 
   void play_tune_cb(const std_msgs::Bool::ConstPtr &play_tune_msg) {
