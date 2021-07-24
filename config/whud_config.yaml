@@ -286,10 +286,10 @@ whud_sensor:
   id:
     lidar_target: "map"
     lidar_source: "track_link"
-    visual_pos_target: "camera_odom_frame"
-    visual_pos_source: "camera_link"
-    visual_vel_track: "camera_link"
-    visual_vel_observation: "camera_odom_frame"
+    visual_pos_target: "t265_odom_frame"
+    visual_pos_source: "t265_link"
+    visual_vel_track: "t265_link"
+    visual_vel_observation: "t265_odom_frame"
   state:
     lidar: false
     visual_pos: false
